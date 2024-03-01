@@ -4,6 +4,8 @@ from .forms import CreateUser, LoginForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 
+from django.contrib.auth.decorators import login_required
+
 def homePage(request):
 
     return render(request, 'webapp/index.html')
@@ -37,13 +39,17 @@ def login(request):
 
             if user is not None:
                 auth.login(request, user)
-                #return redirect("dashboard")
+
+                return redirect("dashboard")
 
     context = {'form':form}
     return render(request, 'webapp/login.html', context=context)
 
 
 #dashboard
+@login_required(login_url='login')
+def dashboard(request):
+    return render(request, "webapp/dashboard.html")
 
 
 
