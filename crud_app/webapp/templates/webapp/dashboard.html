@@ -1,14 +1,22 @@
 {% extends 'webapp/base.html' %}
 
-
-
 {% block content %}
     <h1> DASHBOARD </h1>
 
-    {% for request in request %}
+    <hr>
 
-    {{request.fullName}}
-    {{request.workEmail}}
+    {% if request %}
+        {% for req in request %}
+        <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+          <div class="card-header">{{ req.fullName }}</div>
+          <div class="card-body">
+            <h4 class="card-title">{{ req.workEmail }}</h4>
+            <!-- Add more fields here as needed -->
+          </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No requests found. <a href="{% url '' %}">Create a new request</a>.</p>
+    {% endif %}
 
-    {% endfor %}
 {% endblock %}
