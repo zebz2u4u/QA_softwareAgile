@@ -6,10 +6,12 @@
 
         <div class="text-center">
             <h2> Maintenance Requests</h2>
-
-            <a class="btn btn-primary" type="button" href="{% url 'register' %}"> Create Account</a>
+            {% if user.is_authenticated %}
+                <a class="btn btn-secondary" type="button" href="{% url 'dashboard' %}"> View Dashboard</a>
+            {% else %}
+                <a class="btn btn-primary" type="button" href="{% url 'register' %}"> Create Account</a>
+                <a class="btn btn-secondary" type="button" href="{% url 'login' %}"> Sign In</a>
+            {% endif %}
         </div>
     </body>
-
-
 {% endblock %}
