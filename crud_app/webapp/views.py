@@ -5,6 +5,7 @@ from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 
 from django.contrib.auth.decorators import login_required
+from .models import device_request, maintenance_request, other_request
 
 def homePage(request):
 
@@ -49,7 +50,13 @@ def login(request):
 #dashboard
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, "webapp/dashboard.html")
+    userDevice = device_request.objects.all()
+    #userMaintainence = maintenance_request.objects.all()
+    #userOther = other_request.objects.all()
+
+    context = {'request':userDevice}
+
+    return render(request, "webapp/dashboard.html", context=context)
 
 
 

@@ -5,5 +5,10 @@
 {% block content %}
     <h1> DASHBOARD </h1>
 
-    
+    {% for request in request %}
+
+    {{request.fullName}}
+    {{request.workEmail}}
+
+    {% endfor %}
 {% endblock %}
