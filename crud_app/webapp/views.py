@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from .forms import CreateUser, LoginForm
+from .forms import CreateUser, LoginForm, CreateRequest, UpdateRequest
 
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 
 from django.contrib.auth.decorators import login_required
-from .models import device_request, maintenance_request, other_request
+from . models import Request
+
 
 def homePage(request):
 
@@ -50,20 +51,36 @@ def login(request):
 #dashboard
 @login_required(login_url='login')
 def dashboard(request):
-    userDevice = device_request.objects.all()
-    #userMaintainence = maintenance_request.objects.all()
-    #userOther = other_request.objects.all()
+    requests = Request.objects.all()
 
-    context = {'request':userDevice}
+    context = {'requests':requests}
 
     return render(request, "webapp/dashboard.html", context=context)
 
+#create record
+@login_required(login_url='login')
+def createRecord(request):
+    form = CreateRequest()
+    if request.method == "POST":
+        form = CreateRequest(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+    context = {'form': form}
+    return render(request, 'webapp/create-record.html', context=context)
 
 
-
-
-
-
+@login_required(login_url='login')
+def updateRecord(request, pk):
+    requestId = Request.objects.get(id=pk)
+    form = UpdateRequest(instance=requestId)
+    if request.method == "POST":
+        form = UpdateRequest(request.POST, instance=requestId)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+    context = {'form': form}
+    return render(request, 'webapp/update-record.html', context=context)
 
 
 
