@@ -3,7 +3,23 @@
 
 
 {% block content %}
-    <h1> DASHBOARD </h1>
+    <h1> {{user}}'s DASHBOARD </h1>
 
+    <hr>
+    <a class="btn btn-primary" type="button" href="{% url 'create-record' %}"> Create a Request</a>
+    <hr>
+
+    {% if requests %}
+        {% for request in requests %}
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+        <div class="card-header">{{ request.request_type }}</div>
+        <div class="card-body">
+            <h4 class="card-title">{{ request.request }}</h4>
+        </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No requests found.</p>
+    {% endif %}
     
 {% endblock %}

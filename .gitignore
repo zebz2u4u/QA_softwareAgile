@@ -1,1 +1,4 @@
- */__pycache__/*
+__pycache__/
+practice_venv/
+migrations/
+*.sqlite3

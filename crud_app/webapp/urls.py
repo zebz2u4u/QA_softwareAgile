@@ -12,5 +12,7 @@ urlpatterns = [
 
     path('dashboard', views.dashboard, name="dashboard"),
 
+    path('create-record', views.createRecord, name="create-record"),
 
+    path('update-request/<int:pk>/', views.updateRecord, name='update-record'),
 ]
