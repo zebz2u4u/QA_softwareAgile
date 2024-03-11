@@ -15,7 +15,7 @@ class Request(models.Model):
     workEmail = models.CharField(max_length=255, verbose_name="Work Email")
     lineManager = models.CharField(max_length=255, verbose_name="Line Manager")
     request = models.CharField(max_length=550)
-    request_type = models.CharField(max_length=20, choices=REQUEST_TYPES)
+    request_type = models.CharField(max_length=20, choices=REQUEST_TYPES, verbose_name="Request Type")
 
     def __str__(self):
         return f"{self.id} - {self.fullName}"

@@ -82,6 +82,15 @@ def updateRecord(request, pk):
     context = {'form': form}
     return render(request, 'webapp/update-record.html', context=context)
 
+#view a RECORD
+@login_required(login_url='login')
+def viewRecord(request, pk):
+    requestId = Request.objects.get(id=pk)
+    context = {'request': requestId-*////}
+    return render(request, 'webapp/view-record.html', context=context)
+
+
+
 
 
 def logout(request):
