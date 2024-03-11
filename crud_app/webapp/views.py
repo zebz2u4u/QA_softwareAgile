@@ -86,7 +86,7 @@ def updateRecord(request, pk):
 @login_required(login_url='login')
 def viewRecord(request, pk):
     requestId = Request.objects.get(id=pk)
-    context = {'request': requestId-*////}
+    context = {'request': requestId}
     return render(request, 'webapp/view-record.html', context=context)
 
 
