@@ -1,28 +1,28 @@
 {% extends 'webapp/base.html' %}
 
-
 {% block content %}
-
-    
-    <div class="card bg-light mb-3" style="max-width: 20rem;">
-        <div class="card-header">
-            <strong> {{ request.get_request_type_display }} </strong>
-            <strong> {{ request.fullName }} </strong>
-        </div>
-        <div class="card-body">
-            <p> <strong> ID: </strong> {{request.id}} </p>
-            <p> <strong> Work Email </strong> {{request.workEmail}} </p>
-            <p> <strong> Line Manager: </strong> {{request.lineManager}} </p>
-            <p> <strong> Request: </strong> {{request.request}} </p>
-            
-            <p> <strong> Date Created: </strong> {{request.dateCreated}} </p>
-        </div>
-
-        <a href="{% url 'dashboard' %}" class="btn btn-primary"> Return to Dashboard </a>
-        <a href="{% url 'update-record' request.id%}" class="btn btn-primary"> Edit Request </a>
-        <a href="{% url 'delete-record' request.id %}" class="btn btn-danger"> Delete Request </a>
+<div class="card bg-light mb-3" style="max-width: 20rem;">
+    <div class="card-header">
+        <strong>{{ request.get_request_type_display }}</strong>
+        <strong>{{ request.employee.fullName }}</strong>
     </div>
-    
+    <div class="card-body">
+        <p><strong>ID:</strong> {{ request.id }}</p>
+        <p><strong>Work Email:</strong> {{ request.employee.workEmail }}</p>
+        <p>
+            <strong>Line Manager:</strong> 
+            {% if request.employee.lineManager %}
+                {{ request.employee.lineManager.fullName }}
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Request:</strong> {{ request.request }}</p>
+        <p><strong>Date Created:</strong> {{ request.dateCreated }}</p>
+    </div>
 
-
+    <a href="{% url 'dashboard' %}" class="btn btn-primary">Return to Dashboard</a>
+    <a href="{% url 'update-record' request.id %}" class="btn btn-primary">Edit Request</a>
+    <a href="{% url 'delete-record' request.id %}" class="btn btn-danger">Delete Request</a>
+</div>
 {% endblock %}

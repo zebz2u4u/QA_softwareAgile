@@ -1,49 +1,41 @@
 {% extends 'webapp/base.html' %}
 
-
-
 {% block content %}
-    <h1> {{user}}'s DASHBOARD </h1>
+    <h1>Dashboard for {{ request.user.username }}</h1>
 
     <hr>
-    <a class="btn btn-primary" type="button" href="{% url 'create-record' %}"> Create a Request</a>
+    <a class="btn btn-primary" type="button" href="{% url 'create-record' %}">Create a Request</a>
     <hr>
 
-   <table class="table table-hover table-bordered">
-    <thead class="table-light">
-        <tr>
-            <th scope="col">Date Created</th>
-            <th scope="col">Full Name</th>
-            <th scope="col">Work Email</th>
-            <th scope="col">Line Manager</th>
-            <th scope="col">Request</th>
-            <th scope="col">Request Type</th>
-            <th scope="col">View</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if requests %}
-            {% for request in requests %}
+    <table class="table table-hover table-bordered">
+        <thead class="table-light">
             <tr>
-                <td>{{ request.dateCreated|date:"Y-m-d H:i" }}</td>
-                <td>{{ request.fullName }}</td>
-                <td>{{ request.workEmail }}</td>
-                <td>{{ request.lineManager }}</td>
-                <td>{{ request.request }}</td>
-                <td>{{ request.get_request_type_display }}</td>
-                <td>
-                    <a class="btn btn-success btn-sm" href="{% url 'request' request.id %}">
-                        view
-                    </a>
-                </td>
+                <th scope="col">Date Created</th>
+                <th scope="col">Request</th>
+                <th scope="col">Request Type</th>
+                <th scope="col">View</th>
             </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="7">No requests found</td>
-            </tr>
-        {% endif %}
-    </tbody>
-</table>
-    
+        </thead>
+        <tbody>
+            {% if requests %}
+                {% for request in requests %}
+                <tr>
+                    <td>{{ request.dateCreated|date:"Y-m-d H:i" }}</td>
+                    <td>{{ request.request }}</td>
+                    <td>{{ request.get_request_type_display }}</td>
+                    <td>
+                        <!-- Ensure the URL name matches your urlpattern for viewing a single request -->
+                        <a class="btn btn-success btn-sm" href="{% url 'view-request' request.id %}">
+                            View
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">No requests found</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
 {% endblock %}

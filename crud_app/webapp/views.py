@@ -1,27 +1,23 @@
 from django.shortcuts import render, redirect
-from .forms import CreateUser, LoginForm, CreateRequest, UpdateRequest
-
+from .forms import CreateUserForm, LoginForm, CreateRequest, UpdateRequest
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
-
 from django.contrib.auth.decorators import login_required
-from . models import Request
-
+from .models import Request, Employee
 
 def homePage(request):
 
     return render(request, 'webapp/index.html')
 
 def register(request):
-    form = CreateUser()
-    if request.method == "POST":
-        form = CreateUser(request.POST)
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("login")
-    
-    context = {'form':form}
-    return render(request, 'webapp/register.html', context=context)
+            return redirect('login')  # Assuming you have a 'login' url name
+    else:
+        form = CreateUserForm()
+    return render(request, 'webapp/register.html', {'form': form})
 
 def login(request):
     form = LoginForm()
@@ -45,20 +41,35 @@ def login(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    requests = Request.objects.all()
+    # Ensure that we only get requests related to the logged-in user's employee profile
+    try:
+        employee = request.user.employee
+        requests = Request.objects.filter(employee=employee)
+    except Employee.DoesNotExist:
+        requests = []
 
-    context = {'requests':requests}
-
+    context = {'requests': requests}
     return render(request, "webapp/dashboard.html", context=context)
 
 @login_required(login_url='login')
 def createRecord(request):
-    form = CreateRequest()
     if request.method == "POST":
         form = CreateRequest(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect("dashboard")
+            # Save the form but don't commit to DB yet, so we can add the employee
+            request_instance = form.save(commit=False)
+            # Assuming the current user is the one making the request
+            # Ensure there's an Employee instance related to the user
+            try:
+                employee = request.user.employee
+                request_instance.employee = employee
+                request_instance.save()
+                return redirect("dashboard")
+            except Employee.DoesNotExist:
+                form.add_error(None, "Employee profile not found for the user.")
+    else:
+        form = CreateRequest()
+
     context = {'form': form}
     return render(request, 'webapp/create-record.html', context=context)
 
