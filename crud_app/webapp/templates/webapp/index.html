@@ -5,9 +5,17 @@
         <!-- content of sitte here once planned...watch vid from 1:12:44 -->
 
         <div class="text-center">
-            <h2> Maintenance Requests</h2>
+            {% if user.is_staff %}
+                <h2> Log-it Admin page</h2>
+            {% else %}
+                <h2> Log-it</h2>
+            {% endif %}
             {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <a class="btn btn-secondary" type="button" href="{% url 'admin-dashboard' %}"> View Dashboard</a>
+                {% else %}
                 <a class="btn btn-secondary" type="button" href="{% url 'dashboard' %}"> View Dashboard</a>
+                {% endif %}
             {% else %}
                 <a class="btn btn-primary" type="button" href="{% url 'register' %}"> Create Account</a>
                 <a class="btn btn-secondary" type="button" href="{% url 'login' %}"> Sign In</a>

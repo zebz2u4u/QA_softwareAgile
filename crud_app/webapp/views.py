@@ -72,12 +72,12 @@ def adminUpdateRequest(request, pk):
             update = form.save(commit=False)
             update.request = requestID
             update.save()
-            return redirect('admin-dashboard')
+            return redirect("admin-dashboard")
     else:
         form = RequestUpdateForm()
     
     context = {'form': form, 'request': requestID}
-    return render(request, 'admin-dashboard', context=context)
+    return render(request, "webapp/admin-updates.html", context=context)
 
 @login_required(login_url='login')
 def createRecord(request):

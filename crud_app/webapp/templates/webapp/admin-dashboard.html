@@ -5,17 +5,10 @@
 <ul>
     {% for req in all_requests %}
     <li>
-        Request ID: {{ req.id }}, Requested by: {{ req.employee.user.username }}
-        <a href="{% url 'admin-updates' req.id %}">Update</a>
+        Request ID: {{ req.id }} | Requested by: {{ req.employee.user.username }}
+        <a href="{% url 'admin-updates' req.id %}">ADD Request Update</a>
     </li>
     {% endfor %}
 </ul>
-
-<h2>Add Update to Request ID: {{ request.id }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Update</button>
-</form>
 
 {% endblock %}
