@@ -12,6 +12,10 @@ urlpatterns = [
 
     path('dashboard', views.dashboard, name="dashboard"),
 
+    path('admin-dashboard', views.adminDashboard, name="admin-dashboard"),
+
+    path('admin-updates/<int:pk>', views.adminUpdateRequest, name='admin-updates'),
+
     path('create-record', views.createRecord, name="create-record"),
 
     path('update-record/<int:pk>/', views.updateRecord, name="update-record"),

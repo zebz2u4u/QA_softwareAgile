@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect
-from .forms import CreateUserForm, LoginForm, CreateRequest, UpdateRequest
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import CreateUserForm, LoginForm, CreateRequest, UpdateRequest, RequestUpdateForm
 from django.contrib.auth.models import auth
-from django.contrib.auth import authenticate
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
-from .models import Request, Employee
+from .models import Request, Employee, RequestUpdate
 
 def homePage(request):
 
-    return render(request, 'webapp/index.html')
+    return render(request, "webapp/index.html")
 
 def register(request):
     if request.method == 'POST':
@@ -17,7 +18,9 @@ def register(request):
             return redirect('login')  # Assuming you have a 'login' url name
     else:
         form = CreateUserForm()
-    return render(request, 'webapp/register.html', {'form': form})
+    
+    context = {'form': form}
+    return render(request, "webapp/register.html", context=context)
 
 def login(request):
     form = LoginForm()
@@ -32,12 +35,15 @@ def login(request):
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                auth.login(request, user)
+                auth_login(request, user)
+                # Check if the user is an admin
+                if user.is_staff:
+                    return redirect("admin-dashboard")  # Redirect to the admin dashboard
+                else:
+                    return redirect("dashboard")  # Redirect to the general dashboard
 
-                return redirect("dashboard")
-
-    context = {'form':form}
-    return render(request, 'webapp/login.html', context=context)
+    context = {'form': form}
+    return render(request, "webapp/login.html", context=context)
 
 @login_required(login_url='login')
 def dashboard(request):
@@ -50,6 +56,28 @@ def dashboard(request):
 
     context = {'requests': requests}
     return render(request, "webapp/dashboard.html", context=context)
+
+@staff_member_required
+def adminDashboard(request):
+    all_requests = Request.objects.all().order_by('-dateCreated')
+    context = {'all_requests': all_requests}
+    return render(request, "webapp/admin-dashboard.html", context=context)
+
+@staff_member_required
+def adminUpdateRequest(request, pk):
+    requestID = get_object_or_404(Request, pk=pk)
+    if request.method == 'POST':
+        form = RequestUpdateForm(request.POST)
+        if form.is_valid():
+            update = form.save(commit=False)
+            update.request = requestID
+            update.save()
+            return redirect('admin-dashboard')
+    else:
+        form = RequestUpdateForm()
+    
+    context = {'form': form, 'request': requestID}
+    return render(request, 'admin-dashboard', context=context)
 
 @login_required(login_url='login')
 def createRecord(request):
@@ -71,7 +99,7 @@ def createRecord(request):
         form = CreateRequest()
 
     context = {'form': form}
-    return render(request, 'webapp/create-record.html', context=context)
+    return render(request, "webapp/create-record.html", context=context)
 
 @login_required(login_url='login')
 def updateRecord(request, pk):
@@ -83,13 +111,13 @@ def updateRecord(request, pk):
             form.save()
             return redirect("dashboard")
     context = {'form': form}
-    return render(request, 'webapp/update-record.html', context=context)
+    return render(request, "webapp/update-record.html", context=context)
 
 @login_required(login_url='login')
 def viewRecord(request, pk):
     requestId = Request.objects.get(id=pk)
     context = {'request': requestId}
-    return render(request, 'webapp/view-record.html', context=context)
+    return render(request, "webapp/view-record.html", context=context)
 
 @login_required(login_url='login')
 def deleteRecord(request, pk):

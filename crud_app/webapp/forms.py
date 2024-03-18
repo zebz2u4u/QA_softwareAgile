@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms.widgets import PasswordInput, TextInput
 
-from .models import Request, Employee
+from .models import Request, Employee, RequestUpdate
 
 #create a user
 
@@ -52,3 +52,8 @@ class UpdateRequest(forms.ModelForm):
     class Meta:
         model = Request
         fields = ['request', 'request_type']
+
+class RequestUpdateForm(forms.ModelForm):
+    class Meta:
+        model = RequestUpdate
+        fields = ['update_text']

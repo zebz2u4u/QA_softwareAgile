@@ -19,6 +19,11 @@
         </p>
         <p><strong>Request:</strong> {{ request.request }}</p>
         <p><strong>Date Created:</strong> {{ request.dateCreated }}</p>
+        {% for update in request.updates.all %}
+    <div>
+        <strong>Update on {{ update.update_date }}:</strong> {{ update.update_text }}
+    </div>
+    {% endfor %}
     </div>
 
     <a href="{% url 'dashboard' %}" class="btn btn-primary">Return to Dashboard</a>

@@ -4,8 +4,8 @@ from django.conf import settings
 
 # Email validation
 email_validator = RegexValidator(
-    regex=r'^[a-zA-Z0-9_.+-]+@company\.com$',
-    message="Email must be a valid email address ending with @company.com.",
+    regex=r'^[a-zA-Z0-9_.+-]+@arm\.com$',
+    message="Email must be a valid email address ending with @arm.com.",
 )
 
 class Employee(models.Model):
