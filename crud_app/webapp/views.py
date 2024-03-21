@@ -5,6 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from .models import Request, Employee, RequestUpdate
+from django.contrib import messages
 
 def homePage(request):
 
@@ -15,6 +16,7 @@ def register(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "You're registered!")
             return redirect('login')  # Assuming you have a 'login' url name
     else:
         form = CreateUserForm()
@@ -72,6 +74,7 @@ def adminUpdateRequest(request, pk):
             update = form.save(commit=False)
             update.request = requestID
             update.save()
+            messages.success(request, "Request update sent")
             return redirect("admin-dashboard")
     else:
         form = RequestUpdateForm()
@@ -92,6 +95,7 @@ def createRecord(request):
                 employee = request.user.employee
                 request_instance.employee = employee
                 request_instance.save()
+                messages.success(request, "Record created successfully.")
                 return redirect("dashboard")
             except Employee.DoesNotExist:
                 form.add_error(None, "Employee profile not found for the user.")
@@ -109,6 +113,7 @@ def updateRecord(request, pk):
         form = UpdateRequest(request.POST, instance=requestId)
         if form.is_valid():
             form.save()
+            messages.success(request, "Request updated successfully.")
             return redirect("dashboard")
     context = {'form': form}
     return render(request, "webapp/update-record.html", context=context)
@@ -116,15 +121,22 @@ def updateRecord(request, pk):
 @login_required(login_url='login')
 def viewRecord(request, pk):
     requestId = Request.objects.get(id=pk)
-    context = {'request': requestId}
+    isAdmin = request.user.is_staff
+    context = {'request': requestId, 'isAdmin': isAdmin}
     return render(request, "webapp/view-record.html", context=context)
 
 @login_required(login_url='login')
 def deleteRecord(request, pk):
     requestId = Request.objects.get(id=pk)
-    requestId.delete()
-    return redirect("dashboard")
+
+    if request.method == "POST":
+        requestId.delete()
+        messages.success(request, "Request deleted successfully.")
+        return redirect("dashboard")
+    else:
+        return render(request, "webapp/confirm-delete.html", {'request': requestId})
 
 def logout(request):
     auth.logout(request)
+    messages.success(request, "See you soon!")
     return redirect("login")
