@@ -1,25 +1,41 @@
 {% extends 'webapp/base.html' %}
 
-
-
 {% block content %}
-    <h1> {{user}}'s DASHBOARD </h1>
+    <h1>Dashboard for {{ request.user.username }}</h1>
 
     <hr>
-    <a class="btn btn-primary" type="button" href="{% url 'create-record' %}"> Create a Request</a>
+    <a class="btn btn-primary" type="button" href="{% url 'create-record' %}">Create a Request</a>
     <hr>
 
-    {% if requests %}
-        {% for request in requests %}
-        <div class="card bg-light mb-3" style="max-width: 20rem;">
-        <div class="card-header">{{ request.request_type }}</div>
-        <div class="card-body">
-            <h4 class="card-title">{{ request.request }}</h4>
-        </div>
-        </div>
-        {% endfor %}
-    {% else %}
-        <p>No requests found.</p>
-    {% endif %}
-    
+    <table class="table table-hover table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Date Created</th>
+                <th scope="col">Request</th>
+                <th scope="col">Request Type</th>
+                <th scope="col">View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if requests %}
+                {% for request in requests %}
+                <tr>
+                    <td>{{ request.dateCreated|date:"Y-m-d H:i" }}</td>
+                    <td>{{ request.request }}</td>
+                    <td>{{ request.get_request_type_display }}</td>
+                    <td>
+                        <!-- Ensure the URL name matches your urlpattern for viewing a single request -->
+                        <a class="btn btn-success btn-sm" href="{% url 'view-request' request.id %}">
+                            View
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">No requests found</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
 {% endblock %}

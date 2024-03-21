@@ -1,0 +1,38 @@
+{% extends 'webapp/base.html' %}
+
+{% block content %}
+<div class="card bg-light mb-3" style="max-width: 40rem;">
+    <div class="card-header">
+        <strong>{{ request.get_request_type_display }}</strong>
+        <strong>{{ request.employee.fullName }}</strong>
+    </div>
+    <div class="card-body">
+        <p><strong>ID:</strong> {{ request.id }}</p>
+        <p><strong>Work Email:</strong> {{ request.employee.workEmail }}</p>
+        <p>
+            <strong>Line Manager:</strong> 
+            {% if request.employee.lineManager %}
+                {{ request.employee.lineManager.fullName }}
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Request:</strong> {{ request.request }}</p>
+        <p><strong>Date Created:</strong> {{ request.dateCreated }}</p>
+        {% for update in request.updates.all %}
+            <div>
+                <strong>Update on {{ update.update_date }}:</strong> {{ update.update_text }}
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if not isAdmin %}
+        <a href="{% url 'update-record' request.id %}" class="btn btn-primary">Edit Request</a>
+        <a href="{% url 'delete-record' request.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this request?');">Delete Request</a>
+    {% else %}
+    <a href="{% url 'admin-updates' request.id %}" class="btn btn-secondary">Add Request Update</a>
+    {% endif %}
+    
+    <a href="{% if isAdmin %}{% url 'admin-dashboard' %}{% else %}{% url 'dashboard' %}{% endif %}" class="btn btn-primary">Return to Dashboard</a>
+</div>
+{% endblock %}

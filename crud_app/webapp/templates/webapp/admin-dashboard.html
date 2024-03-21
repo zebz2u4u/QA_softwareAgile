@@ -1,0 +1,14 @@
+{% extends 'webapp/base.html' %}
+
+{% block content %}
+<h2>All Requests</h2>
+<ul>
+    {% for req in all_requests %}
+    <li>
+        Request ID: {{ req.id }} | Requested by: {{ req.employee.user.username }}
+        - <a href="{% url 'view-request' req.id %}">View Request</a> | 
+        <a href="{% url 'admin-updates' req.id %}">Add Request Update</a> |
+   </li>
+    {% endfor %}
+</ul>
+{% endblock %}
