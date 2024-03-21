@@ -24,7 +24,6 @@
                     <td>{{ request.request }}</td>
                     <td>{{ request.get_request_type_display }}</td>
                     <td>
-                        <!-- Ensure the URL name matches your urlpattern for viewing a single request -->
                         <a class="btn btn-success btn-sm" href="{% url 'view-request' request.id %}">
                             View
                         </a>

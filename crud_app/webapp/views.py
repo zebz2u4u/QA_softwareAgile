@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Request, Employee, RequestUpdate
 from django.contrib import messages
 
+# create view here. Will need views for homepage, dashboard, login, various forms etc
+
 def homePage(request):
 
     return render(request, "webapp/index.html")
@@ -17,7 +19,7 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, "You're registered!")
-            return redirect('login')  # Assuming you have a 'login' url name
+            return redirect('login')
     else:
         form = CreateUserForm()
     

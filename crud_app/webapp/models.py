@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.conf import settings 
 
-# Email validation
+# Email validation, make sure that only emails ending with @arm are valid
 email_validator = RegexValidator(
     regex=r'^[a-zA-Z0-9_.+-]+@arm\.com$',
     message="Email must be a valid email address ending with @arm.com.",
