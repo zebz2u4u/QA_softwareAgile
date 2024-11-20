@@ -1,0 +1,2 @@
+Watch Build and run Django in Docker in 10 minutes on YT 
+follow the setup and update reuiremnets.txt
