@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import dj_database_url
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 from crud_app.settings import get_secret
-SECRET_KEY = get_secret('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -80,22 +81,16 @@ WSGI_APPLICATION = 'crud_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # Change DATABASES to connect to a real database
-DB_NAME = get_secret("DB_NAME")
-DB_USER_NM = get_secret("DB_USER_NM")
-DB_USER_PW = get_secret("DB_USER_PW")
-DB_IP = get_secret("DB_IP")
-DB_PORT = get_secret("DB_PORT")
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': DB_NAME,
-        'USER': DB_USER_NM,
-        "PASSWORD": DB_USER_PW,
-        "HOST": DB_IP,
-        "PORT": DB_PORT,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+# database_url = os.environ.get("DATABASE_URL")
+DATABASES["default"] = dj_database_url.parse("postgresql://cruddb_p3g8_user:ylwQ1hIckJu0UWRWu6TMrYHGyQa9khIq@dpg-cteu3056l47c73b489i0-a.frankfurt-postgres.render.com/cruddb_p3g8")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
